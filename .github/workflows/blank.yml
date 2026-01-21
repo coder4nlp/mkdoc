@@ -1,41 +1,26 @@
-# This is a basic workflow to help you get started with Actions
+name: Deploy MkDocs  # 整个文件只能有一个 name
 
-name: CI
-
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-name: Deploy MkDocs
-on:
+on:                 # 整个文件只能有一个 on
   push:
     branches:
-      - main  # 确保这里是你存放源码的主分支名
+      - main        # 这里填入你的主分支名（main 或 master）
 
 permissions:
-  contents: write  # 必须！否则无法推送到 gh-pages 分支
+  contents: write   # 核心权限：确保 Action 有权创建和推送 gh-pages 分支
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # 更新到 v4
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5  # 更新到 v5
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.x
 
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
 
-      - uses: actions/cache@v4  # 更新到 v4
+      - uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
           path: .cache
@@ -45,8 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install mkdocs-material
-          # 如果你使用了自动目录插件，请取消下面一行的注释：
-          # pip install mkdocs-awesome-pages-plugin 
+          # 如果你有其他插件（如 awesome-pages），也请写在这里
 
-      - name: Deploy
+      - name: Build and Deploy
         run: mkdocs gh-deploy --force
