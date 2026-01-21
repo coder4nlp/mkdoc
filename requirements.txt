@@ -1,0 +1,4 @@
+mkdocs>=1.5.0
+mkdocs-material>=9.0.0
+# 如果你用了 awesome-pages 插件，也请写在这里：
+# mkdocs-awesome-pages-plugin
